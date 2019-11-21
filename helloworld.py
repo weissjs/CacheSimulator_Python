@@ -15,7 +15,7 @@ class cache:
         self.index_bits = math.ceil(math.log2(num_blocks))
         self.tag_bits = 32 - self.offset_bits - self.index_bits
     def printCache(self):
-        print(blank)
+        for
 
     def placeAddress(self):
         print(blank)
