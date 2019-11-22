@@ -1,11 +1,12 @@
 import statistics
 import sys
 import math
+from random import randint
 
 class cache:
     #initialize cache with user inputs, and set valids to zero
     #note that block size is in terms of bytes
-    def __init__(self,block_size,num_blocks,N):
+    def __init__(self,block_size,num_blocks,N, random):
         self.block_size = block_size
         self.num_blocks = num_blocks
         self.N = N
@@ -83,7 +84,7 @@ class cache:
                     flag = 1
                     break
             if(flag == 0): # does not find open spot
-                position = 0
+                position = 0;
                 self.set_tags[set_num][0] = tag
                 self.set_valid[set_num][0] = 1
                 self.miss_count += 1
