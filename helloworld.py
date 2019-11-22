@@ -5,28 +5,29 @@ import math
 class cache:
     #initialize cache with user inputs, and set valids to zero
     #note that block size is in terms of bytes
-    def __init__(self,block_size,num_blocks,associativity):
+    def __init__(self,block_size,num_blocks,N):
         self.block_size = block_size
         self.num_blocks = num_blocks
-        self.associativity = associativity
-        self.tags = [0] * num_blocks
-        self.valid = [0] * num_blocks
+        self.N = N
+        self.tags = [0] * num_blocks * N
+        self.valid = [0] * num_blocks * N
         self.offset_bits = math.ceil(math.log2(block_size))
         self.index_bits = math.ceil(math.log2(num_blocks))
         self.tag_bits = 32 - self.offset_bits - self.index_bits
         self.hit_count = 0
         self.miss_count = 0
+        self.addresses = [0] * num_blocks
+        self.set_num = num_blocks / N
         #print("got here")
 
     #this function will attempt to place the given address and data into
     #the cache. it returns either a 1 for a hit or a zero for a miss
     def placeAddressDirect(self, address):
-        self.address = address
         # index = address / block size
 
-        index = math.floor(self.address / self.block_size) % self.num_blocks
+        index = math.floor(address / self.block_size) % self.num_blocks
 
-        tag = self.address >> (self.index_bits + self.offset_bits)
+        tag = address >> (self.index_bits + self.offset_bits)
         if self.tags[index] == tag:
             if self.valid[index] == 1:
                 self.hit_count += 1
@@ -39,16 +40,22 @@ class cache:
             self.valid[index] = 1
             self.miss_count += 1
 
+        self.addresses[index] = address
+    def placeAddressAssociative(self, address, N):
+        numCacheLines = (self.num_blocks * self.block_size) / (self.block_size * N)
+        index = math.floor(address / self.block_size) % self.num_blocks
 
-        #print("tag trial : ", tag);
+        set_num = math.floor(address / self.block_size) % numCacheLines
+        tag = address / (numCacheLines * block_size)
+
+
+
     def printCache(self):
         i = 0
         for x in self.tags:
             print("index is: ", i, "valid: ", self.valid[i], "tag: ",
-                    self.tags[i])
+                    self.tags[i], "start mem: ", self.addresses[i])
             i+=1
-        print("\n\n")
-        return 1;
 
 
 
@@ -68,13 +75,23 @@ def main():
 
     print(test1.input_arr)
     c1.printCache()
-    c1.placeAddressDirect(30866)
+    c1.placeAddressDirect(0)
     c1.printCache()
-    c1.placeAddressDirect(41920)
+    c1.placeAddressDirect(3)
     c1.printCache()
-    c1.placeAddressDirect(22672)
+    c1.placeAddressDirect(11)
     c1.printCache()
-    c1.placeAddressDirect(1127)
+    c1.placeAddressDirect(16)
+    c1.printCache()
+    c1.placeAddressDirect(21)
+    c1.printCache()
+    c1.placeAddressDirect(11)
+    c1.printCache()
+    c1.placeAddressDirect(16)
+    c1.printCache()
+    c1.placeAddressDirect(48)
+    c1.printCache()
+    c1.placeAddressDirect(16)
     c1.printCache()
 
     print("block size: ", c1.block_size)
