@@ -122,8 +122,22 @@ class test:
 
 
 def main():
-    c1 = cache(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+
+    num_blocks = int(sys.argv[2])
+    block_size = int(sys.argv[1])
+    assoc = int(sys.argv[3])
+
+
+    if(num_blocks < 1 | block_size < 1 | assoc < 1):
+        print("ERROR 0: Invalid inputs")
+        return
+
+    c1 = cache(block_size, num_blocks, assoc)
     test1 = test(sys.argv[4])
+
+    if(c1.N * c1.numCacheLines != c1.num_blocks):
+        print("Error 1: Assoc size does not match")
+        return
 
     if(c1.N < 2):
         i = 0
